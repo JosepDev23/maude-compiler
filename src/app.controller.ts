@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common'
 import { AppService } from './app.service'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import Command from './command.model'
+import Command from './models/command.model'
 
 @ApiTags('Maude Controller')
 @Controller('maude')
