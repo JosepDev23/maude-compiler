@@ -9,8 +9,9 @@ export class DockerService implements OnModuleDestroy {
   private userContainers = new Map<string, string>()
 
   async createUserContainer(userId: string): Promise<string> {
+    console.log('Creating container for user:', userId)
     const containerName: string = `maude-${uuidv4()}`
-
+    console.log('Container name:', containerName)
     const container: Docker.Container = await this.docker.createContainer({
       Image: 'maude-container',
       name: containerName,
@@ -19,9 +20,11 @@ export class DockerService implements OnModuleDestroy {
       AttachStdout: true,
       AttachStderr: true,
     })
-
+    console.log('Container created:', container.id)
     await container.start()
+    console.log('Container started:', container.id)
     this.userContainers.set(userId, container.id)
+    console.log('User containers:', this.userContainers)
     return container.id
   }
 
@@ -59,11 +62,15 @@ export class DockerService implements OnModuleDestroy {
   async removeUserContainer(userId: string): Promise<void> {
     const containerId: string = this.userContainers.get(userId)
     if (!containerId) return
-
+    console.log('Deleting container for user ' + userId)
     const container: Docker.Container = this.docker.getContainer(containerId)
+    console.log('Container:', container.id)
     await container.stop()
+    console.log('Container stopped')
     await container.remove()
+    console.log('Container removed')
     this.userContainers.delete(userId)
+    console.log('User containers:', this.userContainers)
   }
 
   async onModuleDestroy() {
