@@ -6,14 +6,14 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'
-import { DockerService } from './docker.service'
+import { MaudeContainerService } from './maude-container-service.service'
 import User from 'src/models/user.model'
 import MaudeCode from 'src/models/maude-code.model'
 
-@ApiTags('Docker Controller')
-@Controller('docker')
-export class DockerController {
-  constructor(private readonly dockerService: DockerService) {}
+@ApiTags('MaudeContainer Controller')
+@Controller('maude-container')
+export class MaudeContainerController {
+  constructor(private readonly maudeContainerService: MaudeContainerService) {}
 
   @Post('container')
   @ApiOperation({ summary: 'Create User Container' })
@@ -24,17 +24,20 @@ export class DockerController {
     type: String,
   })
   createUserContainer(@Body() user: User): Promise<string> {
-    return this.dockerService.createUserContainer(user.id)
+    return this.maudeContainerService.createUserContainer(user.id)
   }
 
-  @Post('exec-maude-code')
+  @Post('exec-code')
   @ApiOperation({ summary: 'Exec Maude Code' })
   @ApiBody({ description: 'Maude code' })
   @ApiResponse({ status: 201, description: 'Code Executed', type: String })
   execMaudeCode(
     @Body() maudeCode: MaudeCode,
   ): Promise<{ stdout: string; stderr: string }> {
-    return this.dockerService.executeCode(maudeCode.userId, maudeCode.code)
+    return this.maudeContainerService.executeCode(
+      maudeCode.userId,
+      maudeCode.code,
+    )
   }
 
   @Delete('container/:userId')
@@ -42,6 +45,6 @@ export class DockerController {
   @ApiParam({ name: 'userId', required: true })
   @ApiResponse({ status: 200, description: 'User Container Removed' })
   removeUserContainer(@Param('userId') userId: string): Promise<void> {
-    return this.dockerService.removeUserContainer(userId)
+    return this.maudeContainerService.removeUserContainer(userId)
   }
 }

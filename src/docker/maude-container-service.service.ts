@@ -6,10 +6,10 @@ import {
   ContainerLimitExceededException,
   UserContainerExistsException,
   UserContainerNotFoundException,
-} from './docker.errors'
+} from './maude-container-service.errors'
 
 @Injectable()
-export class DockerService implements OnModuleDestroy {
+export class MaudeContainerService implements OnModuleDestroy {
   private docker = new Docker()
   private userContainers = new Map<string, string>()
 
