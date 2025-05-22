@@ -31,7 +31,9 @@ export class DockerController {
   @ApiOperation({ summary: 'Exec Maude Code' })
   @ApiBody({ description: 'Maude code' })
   @ApiResponse({ status: 201, description: 'Code Executed', type: String })
-  execMaudeCode(@Body() maudeCode: MaudeCode): Promise<string> {
+  execMaudeCode(
+    @Body() maudeCode: MaudeCode,
+  ): Promise<{ stdout: string; stderr: string }> {
     return this.dockerService.executeCode(maudeCode.userId, maudeCode.code)
   }
 
