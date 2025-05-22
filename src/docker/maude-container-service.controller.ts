@@ -15,7 +15,7 @@ import MaudeCode from 'src/models/maude-code.model'
 export class MaudeContainerController {
   constructor(private readonly maudeContainerService: MaudeContainerService) {}
 
-  @Post('container')
+  @Post()
   @ApiOperation({ summary: 'Create User Container' })
   @ApiBody({ description: 'User' })
   @ApiResponse({
@@ -40,7 +40,7 @@ export class MaudeContainerController {
     )
   }
 
-  @Delete('container/:userId')
+  @Delete(':userId')
   @ApiOperation({ summary: 'Remove User Container' })
   @ApiParam({ name: 'userId', required: true })
   @ApiResponse({ status: 200, description: 'User Container Removed' })
