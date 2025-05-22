@@ -37,11 +37,9 @@ export class DockerService implements OnModuleDestroy {
 
     const container = this.docker.getContainer(containerId)
 
-    // 1. Empaquetamos el código en un tar y lo copiamos a /workspace/tmp.maude
     const tarStream = await this.buildTar(code)
     await container.putArchive(tarStream, { path: '/workspace' })
 
-    // 2. Ejecutamos Maude sobre ese archivo
     const exec = await container.exec({
       AttachStdout: true,
       AttachStderr: true,
@@ -53,19 +51,18 @@ export class DockerService implements OnModuleDestroy {
     const muxStream = (
       'output' in execRes ? execRes.output : execRes
     ) as NodeJS.ReadableStream
-    // 3. Demultiplexamos salida
+
     const stdoutStream = new PassThrough()
     const stderrStream = new PassThrough()
     this.docker.modem.demuxStream(muxStream, stdoutStream, stderrStream)
 
-    // 4. Recogemos buffers y timeout de seguridad
     return new Promise((resolve, reject) => {
       const chunksOut: Buffer[] = []
       const chunksErr: Buffer[] = []
       const timer = setTimeout(
         () => reject(new Error('Execution timeout')),
         30_000,
-      ) // 30 s
+      )
 
       stdoutStream.on('data', (c) => chunksOut.push(c))
       stderrStream.on('data', (c) => chunksErr.push(c))
@@ -106,7 +103,7 @@ export class DockerService implements OnModuleDestroy {
   }
 
   private async buildTar(code: string): Promise<NodeJS.ReadableStream> {
-    const tar = require('tar-stream').pack() // import dinámico para no cargar en frío
+    const tar = require('tar-stream').pack()
     tar.entry({ name: 'tmp.maude' }, code)
     tar.finalize()
     return tar
