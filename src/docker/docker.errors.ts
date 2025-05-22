@@ -17,3 +17,12 @@ export class ContainerLimitExceededException extends HttpException {
     )
   }
 }
+
+export class UserContainerNotFoundException extends HttpException {
+  constructor(userId: string) {
+    super(
+      `El usuario «${userId}» no tiene ningún contenedor activo.`,
+      HttpStatus.NOT_FOUND,
+    )
+  }
+}

@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import {
   ContainerLimitExceededException,
   UserContainerExistsException,
+  UserContainerNotFoundException,
 } from './docker.errors'
 
 @Injectable()
@@ -98,7 +99,10 @@ export class DockerService implements OnModuleDestroy {
 
   async removeUserContainer(userId: string): Promise<void> {
     const containerId: string = this.userContainers.get(userId)
-    if (!containerId) return
+
+    if (!containerId) {
+      throw new UserContainerNotFoundException(userId)
+    }
 
     const container: Docker.Container = this.docker.getContainer(containerId)
 
