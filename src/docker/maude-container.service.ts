@@ -6,7 +6,7 @@ import {
   ContainerLimitExceededException,
   UserContainerExistsException,
   UserContainerNotFoundException,
-} from './maude-container-service.errors'
+} from './maude-container.errors'
 
 @Injectable()
 export class MaudeContainerService implements OnModuleDestroy {

@@ -6,7 +6,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'
-import { MaudeContainerService } from './maude-container-service.service'
+import { MaudeContainerService } from './maude-container.service'
 import User from 'src/models/user.model'
 import MaudeCode from 'src/models/maude-code.model'
 
